@@ -1,6 +1,16 @@
 module.exports = function(grunt) {
 
 	grunt.initConfig({
+
+		"jsdoc": {
+			"dist": {
+				"options": {
+					"destination": "doc"
+				},
+				"src": [ "src/*.js" ]
+			}
+		},
+
 		"jshint": {
 			"dist": {
 				"files": {
@@ -11,11 +21,14 @@ module.exports = function(grunt) {
 				}
 			}
 		},
+
 		"pkg": grunt.file.readJSON("package.json")
+
 	});
 
 	grunt.loadNpmTasks("grunt-contrib-jshint");
+	grunt.loadNpmTasks("grunt-jsdoc");
 
-	grunt.registerTask("default", [ "jshint" ]);
+	grunt.registerTask("default", [ "jshint", "jsdoc" ]);
 
 };
