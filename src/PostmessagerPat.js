@@ -60,15 +60,25 @@
 	}
 
 
-
+	/**
+	 * PostmessagerPat class
+	 * @global
+	 * @class
+	 */
 	function PostmessagerPat() {
 
-		this._hook = function(e) {
+		/**
+		 * One listener to rule them all
+		 * @type {Function}
+		 * @protected
+		 * @param  {Object}  eventData  Event data
+		 */
+		this._hook = function( eventData ) {
 
 			var i = -1;
 			var len = 0;
 			var id = null;
-			var origin = e.origin;
+			var origin = eventData.origin;
 
 			if( this.origins.hasOwnProperty( origin ) &&
 					this.origins[ origin ].length > 0 ){
@@ -76,7 +86,7 @@
 				len = this.origins[ origin ].length;
 				while( ++i < len ){
 					id = this.origins[ origin ][ i ];
-					this._ids[ id ].handler( e );
+					this._ids[ id ].handler( eventData );
 				}
 			}
 
@@ -86,13 +96,23 @@
 				len = this.origins["*"].length;
 				while( ++i < len ){
 					id = this.origins[ "*" ][ i ];
-					this._ids[ id ].handler( e );
+					this._ids[ id ].handler( eventData );
 				}
 			}
 
 		}.bind(this);
+
+		/**
+		 * Stores the ids of the listeners
+		 * @type {Object}
+		 * @protected
+		 */
 		this._ids = {};
 
+		/**
+		 * Stores the current origins we are allowing
+		 * @type {Object}
+		 */
 		this.origins = {};
 
 		addEvent(window, "message", this._hook);
@@ -102,21 +122,42 @@
 
 		"constructor": PostmessagerPat,
 
+		/**
+		 * Clears internal objects and removes the window listener
+		 */
 		"destroy": function() {
 			var key = null;
+
+			/**
+			 * Clear the listeners
+			 */
 			for( key in this._ids ){
 				this._ids[ key ] = null;
 			}
 			this._ids = null;
+
+			/**
+			 * Clear the origins
+			 */
 			for( key in this.origins ){
 				this.origins[ key ].length = 0;
 				this.origins[ key ] = null;
 			}
 			this.origins = null;
+
+			/**
+			 * Remove our window listener
+			 */
 			removeEvent(window, "message", this._hook);
 			this._hook = null;
 		},
 
+		/**
+		 * Sends the information using postMessage
+		 * @param  {Object} win    The window to post to
+		 * @param  {String|Array.<String>} origin Origin(s) to post to
+		 * @param  {*} data   The data that will be posted to the window
+		 */
 		"publish": function( win, origin, data ) {
 
 			if( is( origin ) === "array" ){
@@ -131,9 +172,15 @@
 
 		},
 
+		/**
+		 * Adds a listener internally looking out for data from specified origins
+		 * @param  {String|Array.<String>} origin  Origin(s) to accept from
+		 * @param  {Function} handler Callback to be triggered when data comes through
+		 * @return {Number}         UID/Index of this subscriber
+		 */
 		"subscribe": function( origin, handler ) {
 
-			var id = PostmessagerPat.UUID++;
+			var id = PostmessagerPat.UID++;
 
 			this._ids[ id ] = {
 				"handler": handler,
@@ -161,6 +208,11 @@
 			return id;
 		},
 
+		/**
+		 * Removes an internal listener based on its UID or domain
+		 * @param  {Number|String} id The UID of the handler or domain you wish to
+		 *                            remove handlers from
+		 */
 		"unsubscribe": function( id ) {
 
 			var len = -1;
@@ -168,21 +220,29 @@
 
 			if( typeof id === "string" ){
 				
-				// Quit early if we have no domains with that id
+				/**
+				 *  Quit early if we have no domains with that id
+				 */
 				if( !this.origins.hasOwnProperty( id ) ){ return; }
 
 				var handlerId = null;
 				domainIndex = -1;
 				len = this.origins[ id ].length;
+
 				while( len-- ){
+
 					handlerId = this.origins[ id ][ len ];
 					domainIndex = this._ids[ handlerId ].origins.indexOf( id );
 					this._ids[ handlerId ].origins.splice( domainIndex, 1 );
-					// Handler has no more domains so remove it
+					
+					/**
+					 * Check if handler has no more domains, if so remove it
+					 */
 					if( this._ids[ handlerId ].origins.length === 0 ){
 						this._ids[ handlerId ] = null;
 						delete this._ids[ handlerId ];
 					}
+
 				}
 
 				return;
@@ -190,18 +250,27 @@
 
 			var origin = "";
 			len = this._ids[ id ].origins.length;
+
 			while( len-- ){
+
 				origin = this._ids[ id ].origins[ len ];
 				domainIndex = this.origins[ origin ].indexOf( id );
 				this.origins[ origin ].splice( domainIndex, 1 );
+
 			}
+
 			this._ids[ id ].origins = null;
 			delete this._ids[ id ];
 
 		}
 
 	};
-	PostmessagerPat.UUID = 0;
+
+	/**
+	 * Unique ID for the listener
+	 * @type {Number}
+	 */
+	PostmessagerPat.UID = 0;
 
 	window.PostmessagerPat = PostmessagerPat;
 
