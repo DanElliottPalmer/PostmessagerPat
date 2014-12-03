@@ -1,4 +1,5 @@
 (function() {
+	"use strict";
 
 	/**
 	 * Function.bind polyfill
@@ -14,14 +15,14 @@
 
 			var aArgs = Array.prototype.slice.call(arguments, 1),
 				fToBind = this,
-				fNOP = function() {},
+				FNOP = function() {},
 				fBound = function() {
-					return fToBind.apply(this instanceof fNOP && oThis ? this : oThis,
+					return fToBind.apply(this instanceof FNOP && oThis ? this : oThis,
 						aArgs.concat(Array.prototype.slice.call(arguments)));
 				};
 
-			fNOP.prototype = this.prototype;
-			fBound.prototype = new fNOP();
+			FNOP.prototype = this.prototype;
+			fBound.prototype = new FNOP();
 
 			return fBound;
 		};
@@ -132,7 +133,9 @@
 			 * Clear the listeners
 			 */
 			for( key in this._ids ){
-				this._ids[ key ] = null;
+				if( this._ids.hasOwnProperty( key ) ){
+					this._ids[ key ] = null;
+				}
 			}
 			this._ids = null;
 
@@ -140,8 +143,10 @@
 			 * Clear the origins
 			 */
 			for( key in this.origins ){
-				this.origins[ key ].length = 0;
-				this.origins[ key ] = null;
+				if( this.origins.hasOwnProperty( key ) ){
+					this.origins[ key ].length = 0;
+					this.origins[ key ] = null;
+				}
 			}
 			this.origins = null;
 
