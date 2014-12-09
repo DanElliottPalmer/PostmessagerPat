@@ -198,7 +198,7 @@
 
 			this._ids[ id ] = {
 				"handler": handler,
-				"origins": origin
+				"origins": Array.prototype.concat( origin )
 			};
 
 			if( is( origin ) === "array" ){
