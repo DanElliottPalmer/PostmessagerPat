@@ -69,34 +69,43 @@
 	function PostmessagerPat() {
 
 		/**
+		 * Stores whether we are being destroyed
+		 * This is in case we happen to destroy during a message event 
+		 * @type {Boolean}
+		 */
+		this._destroying = false;
+
+		/**
 		 * One listener to rule them all
 		 * @memberOf PostmessagerPat
 		 * @type {Function}
 		 * @protected
 		 * @param  {Object}  eventData  Event data
 		 */
-		this._hook = function( eventData ) {
+		this._hook = function _hook( eventData ) {
 
 			var i = -1;
 			var len = 0;
 			var id = null;
 			var origin = eventData.origin;
 
-			if( this.origins.hasOwnProperty( origin ) &&
+			if( !this._destroying &&
+					this.origins.hasOwnProperty( origin ) &&
 					this.origins[ origin ].length > 0 ){
 				i = -1;
 				len = this.origins[ origin ].length;
-				while( ++i < len ){
+				while( !this._destroying && ++i < len ){
 					id = this.origins[ origin ][ i ];
 					this._ids[ id ].handler( eventData );
 				}
 			}
 
-			if( this.origins.hasOwnProperty( "*" ) &&
+			if( !this._destroying &&
+					this.origins.hasOwnProperty( "*" ) &&
 					this.origins["*"].length > 0 ){
 				i = -1;
 				len = this.origins["*"].length;
-				while( ++i < len ){
+				while( !this._destroying && ++i < len ){
 					id = this.origins[ "*" ][ i ];
 					this._ids[ id ].handler( eventData );
 				}
@@ -132,6 +141,8 @@
 		 */
 		"destroy": function() {
 			var key = null;
+
+			this._destroying = true;
 
 			/**
 			 * Clear the listeners
