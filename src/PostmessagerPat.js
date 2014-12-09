@@ -249,6 +249,10 @@
 
 					handlerId = this.origins[ id ][ len ];
 					domainIndex = this._ids[ handlerId ].origins.indexOf( id );
+					
+					/**
+					 * Remove handler from ids
+					 */
 					this._ids[ handlerId ].origins.splice( domainIndex, 1 );
 					
 					/**
@@ -261,6 +265,12 @@
 					}
 
 				}
+
+				/**
+				 * Clear and remove the domain
+				 */
+				this.origins[ id ].length = 0;
+				delete this.origins[ id ];
 
 				return;
 			}
