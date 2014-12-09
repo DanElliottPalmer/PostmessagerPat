@@ -277,6 +277,7 @@
 			}
 
 			this._ids[ id ].origins = null;
+			this._ids[ id ].handler = null;
 			delete this._ids[ id ];
 
 		}
