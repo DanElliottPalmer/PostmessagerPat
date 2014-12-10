@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>QUnit Example</title>
+  <link rel="stylesheet" href="lib/qunit-1.16.0.css" />
+</head>
+<body>
+	<iframe src="" id="frameChild"></iframe>
+  <div id="qunit"></div>
+  <div id="qunit-fixture"></div>
+  <script type="text/javascript">
+
+	  function addEvent(el, eve, handler) {
+  		if (el.addEventListener) {
+  			return el.addEventListener(eve, handler);
+  		}
+  		return el.attachEvent("on" + eve, handler);
+  	}
+	  	
+	  function removeEvent(el, eve, handler) {
+  		if (el.removeEventListener) {
+  			return el.removeEventListener(eve, handler);
+  		}
+  		return el.detachEvent("on" + eve, handler);
+  	}
+
+  </script>
+  <script type="text/javascript" src="../src/PostmessagerPat.js"></script>
+  <script src="lib/qunit-1.16.0.js"></script>
+  <script src="spec/origin.js"></script>
+  <script src="spec/publish.js"></script>
+  <script src="spec/subscribe.js"></script>
+  <script src="spec/unsubscribe.js"></script>
+</body>
+</html>
