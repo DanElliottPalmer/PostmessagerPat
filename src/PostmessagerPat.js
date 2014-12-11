@@ -41,6 +41,19 @@
 		return el.attachEvent("on" + eve, handler);
 	}
 
+	function indexOf( el, item ){
+		if( typeof el.indexOf === "function" ){
+			return el.indexOf( item );
+		}
+		var len = el.length;
+		while( len-- ){
+			if( el[ len ] === item ){
+				return len;
+			}
+		}
+		return -1;
+	}
+
 	function is( obj ){
 		return Object.prototype.toString.call( obj )
 										.replace(/\[object ([\w]+)\]/i, "$1")
@@ -259,7 +272,7 @@
 				while( len-- ){
 
 					handlerId = this.origins[ id ][ len ];
-					domainIndex = this._ids[ handlerId ].origins.indexOf( id );
+					domainIndex = indexOf( this._ids[ handlerId ].origins, id );
 					
 					/**
 					 * Remove handler from ids
@@ -292,7 +305,7 @@
 			while( len-- ){
 
 				origin = this._ids[ id ].origins[ len ];
-				domainIndex = this.origins[ origin ].indexOf( id );
+				domainIndex = indexOf( this.origins[ origin ], id );
 				this.origins[ origin ].splice( domainIndex, 1 );
 
 			}
