@@ -9,12 +9,13 @@ test( "Single domain", function( assert ){
 	var tmr = null;
 	var frame = document.getElementById("frameChild");
 
-	pp.subscribe( "http://localhost", function( e ){
-		assert.equal( e.data, true );
+	pp.subscribe( ALLOWED_ORIGIN, function( e ){
 		clearTimeout( tmr ) && ( tmr = null );
+		assert.equal( e.data, "true" );
 		complete();
 	} );
 
+	addEvent( frame, "load", onFrameLoad );
 	frame.src = "./frames/subscribe.html";
 
 	function complete(){
@@ -25,6 +26,7 @@ test( "Single domain", function( assert ){
 	}
 
 	function onFrameLoad(){
+		removeEvent( frame, "load", onFrameLoad );
 		tmr = setTimeout(function(){
 			assert.ok(false);
 			complete();
@@ -42,12 +44,13 @@ test( "Multiple domains", function( assert ){
 	var tmr = null;
 	var frame = document.getElementById("frameChild");
 
-	pp.subscribe( [ "http://localhost", "http://random" ], function( e ){
-		assert.equal( e.data, true );
+	pp.subscribe( [ ALLOWED_ORIGIN, "http://random" ], function( e ){
+		assert.equal( e.data, "true" );
 		clearTimeout( tmr ) && ( tmr = null );
 		complete();
 	} );
 
+	addEvent( frame, "load", onFrameLoad );
 	frame.src = "./frames/subscribe.html";
 
 	function complete(){
@@ -58,6 +61,7 @@ test( "Multiple domains", function( assert ){
 	}
 
 	function onFrameLoad(){
+		removeEvent( frame, "load", onFrameLoad );
 		tmr = setTimeout(function(){
 			assert.ok(false);
 			complete();

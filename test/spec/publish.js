@@ -11,9 +11,9 @@ test( "", function( assert ){
 
 	var testData = Math.random();
 
-	pp.subscribe( "http://localhost", function( e ){
-		assert.equal( testData, e.data );
+	pp.subscribe( ALLOWED_ORIGIN, function( e ){
 		clearTimeout( tmr ) && ( tmr = null );
+		assert.equal( testData, e.data );
 		complete();
 	} );
 
@@ -29,13 +29,13 @@ test( "", function( assert ){
 
 	function onFrameLoad(){
 		removeEvent( frame, "load", onFrameLoad );
-		pp.publish( frame.contentWindow, "http://localhost", testData );
-		tmr = setTimeout( timeout, 500 );
+		tmr = setTimeout( timeout, 1000 );
+		pp.publish( frame.contentWindow, ALLOWED_ORIGIN, testData );
 	}
 
 	function timeout(){
 		assert.ok( false );
-		done();
+		complete();
 	}
 
 } );

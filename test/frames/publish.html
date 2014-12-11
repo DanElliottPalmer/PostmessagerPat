@@ -14,9 +14,14 @@
 	<body>
 		publish
 		<script type="text/javascript">
-			window.onmessage = function( e ){
+			function message(e){
 				window.parent.postMessage( e.data, "*" );
-			};
+			}
+			if( document.addEventListener ){
+				window.addEventListener("message", message);
+			} else {
+				window.attachEvent("onmessage", message);
+			}
 		</script>
 	</body>
 </html>

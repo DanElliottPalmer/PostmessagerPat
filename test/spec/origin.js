@@ -8,8 +8,8 @@ test( "Allowed origin", function( assert ){
 	var frame = document.getElementById("frameChild");
 	var tmr = null;
 
-	pp.subscribe( [ "http://localhost", "http://otherplace.co.uk" ] , function( e ){
-		if( e.origin === "http://localhost" ){
+	pp.subscribe( [ "http://otherplace.co.uk", ALLOWED_ORIGIN ] , function( e ){
+		if( e.origin === ALLOWED_ORIGIN ){
 			assert.ok(true);
 			clearTimeout( tmr ) && ( tmr = null );
 			complete();
@@ -28,7 +28,6 @@ test( "Allowed origin", function( assert ){
 
 	function onFrameLoad(){
 		removeEvent( frame, "load", onFrameLoad );
-		console.log("remove");
 		tmr = setTimeout(function(){
 			assert.ok(false);
 			complete();

@@ -8,7 +8,7 @@ test( "Listener ID", function( assert ){
 	var frame = document.getElementById("frameChild");
 	var done = assert.async();
 
-	var id = pp.subscribe( "http://localhost", function( e ){
+	var id = pp.subscribe( ALLOWED_ORIGIN, function( e ){
 
 		assert.ok( true );
 		pp.unsubscribe( id );
@@ -38,10 +38,10 @@ test( "Domain", function( assert ){
 	var frame = document.getElementById("frameChild");
 	var done = assert.async();
 
-	pp.subscribe( "http://localhost", function( e ){
+	pp.subscribe( ALLOWED_ORIGIN, function( e ){
 
 		assert.ok( true );
-		pp.unsubscribe( "http://localhost" );
+		pp.unsubscribe( ALLOWED_ORIGIN );
 
 		frame.src = "";
 		frame.src = "./frames/unsubscribe.html";
