@@ -20,6 +20,7 @@ test( "Allowed origin", function( assert ){
 	frame.src = "./frames/origin.html";
 
 	function complete(){
+		removeEvent( frame, "load", onFrameLoad );
 		pp.destroy();
 		pp = null;
 		done();
@@ -27,6 +28,7 @@ test( "Allowed origin", function( assert ){
 
 	function onFrameLoad(){
 		removeEvent( frame, "load", onFrameLoad );
+		console.log("remove");
 		tmr = setTimeout(function(){
 			assert.ok(false);
 			complete();
@@ -53,6 +55,7 @@ test( "Disallowed origin", function( assert ){
 	frame.src = "./frames/origin.html";
 
 	function complete(){
+		removeEvent( frame, "load", onFrameLoad );
 		pp.destroy();
 		pp = null;
 		done();

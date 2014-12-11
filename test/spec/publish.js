@@ -21,6 +21,7 @@ test( "", function( assert ){
 	frame.src = "./frames/publish.html";
 
 	function complete(){
+		removeEvent( frame, "load", onFrameLoad );
 		pp.destroy();
 		pp = null;
 		done();

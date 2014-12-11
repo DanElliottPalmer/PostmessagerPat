@@ -7,6 +7,7 @@ test( "Single domain", function( assert ){
 	var pp = new PostmessagerPat();
 	var done = assert.async();
 	var tmr = null;
+	var frame = document.getElementById("frameChild");
 
 	pp.subscribe( "http://localhost", function( e ){
 		assert.equal( e.data, true );
@@ -14,9 +15,10 @@ test( "Single domain", function( assert ){
 		complete();
 	} );
 
-	document.getElementById("frameChild").src = "./frames/subscribe.html";
+	frame.src = "./frames/subscribe.html";
 
 	function complete(){
+		removeEvent( frame, "load", onFrameLoad );
 		pp.destroy();
 		pp = null;
 		done();
@@ -38,6 +40,7 @@ test( "Multiple domains", function( assert ){
 	var pp = new PostmessagerPat();
 	var done = assert.async();
 	var tmr = null;
+	var frame = document.getElementById("frameChild");
 
 	pp.subscribe( [ "http://localhost", "http://random" ], function( e ){
 		assert.equal( e.data, true );
@@ -45,9 +48,10 @@ test( "Multiple domains", function( assert ){
 		complete();
 	} );
 
-	document.getElementById("frameChild").src = "./frames/subscribe.html";
+	frame.src = "./frames/subscribe.html";
 
 	function complete(){
+		removeEvent( frame, "load", onFrameLoad );
 		pp.destroy();
 		pp = null;
 		done();
