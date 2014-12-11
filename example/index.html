@@ -19,8 +19,7 @@
 			var pat = new PostmessagerPat();
 			var id = pat.subscribe( ["http://localhost"], function( e ){
 				console.log( e );
-			} );
-			pat.unsubscribe( id );
+			}, document.getElementsByTagName("iframe")[0].contentWindow );
 
 		</script>
 	</body>

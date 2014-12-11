@@ -16,9 +16,9 @@
 		<script type="text/javascript">
 
 		var pp = new PostmessagerPat();
-		pp.publish( window.parent, "*", "test");
-
-		window.addEventListener("click", pp.publish(window.parent,"*"));
+		window.addEventListener("click", function(){
+			pp.publish( window.parent, "*", "test");
+		});
 
 		</script>
 	</body>
