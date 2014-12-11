@@ -109,7 +109,10 @@
 				len = this.origins[ origin ].length;
 				while( !this._destroying && ++i < len ){
 					id = this.origins[ origin ][ i ];
-					this._ids[ id ].handler( eventData );
+					if( !this._ids[ id ].window || 
+							this._ids[ id ].window === eventData.source ){
+						this._ids[ id ].handler( eventData );
+					}					
 				}
 			}
 
@@ -120,7 +123,10 @@
 				len = this.origins["*"].length;
 				while( !this._destroying && ++i < len ){
 					id = this.origins[ "*" ][ i ];
-					this._ids[ id ].handler( eventData );
+					if( !this._ids[ id ].window || 
+							this._ids[ id ].window === eventData.source ){
+						this._ids[ id ].handler( eventData );
+					}	
 				}
 			}
 
@@ -214,15 +220,17 @@
 		 * @memberOf PostmessagerPat
 		 * @param  {String|Array.<String>} origin  Origin(s) to accept from
 		 * @param  {Function} handler Callback to be triggered when data comes through
+		 * @param  {Object|Null|Undefined} win Window the response can come from
 		 * @return {Number}         UID/Index of this subscriber
 		 */
-		"subscribe": function( origin, handler ) {
+		"subscribe": function( origin, handler, win ) {
 
 			var id = PostmessagerPat.UID++;
 
 			this._ids[ id ] = {
 				"handler": handler,
-				"origins": Array.prototype.concat( origin )
+				"origins": Array.prototype.concat( origin ),
+				"window": win || null
 			};
 
 			if( is( origin ) === "array" ){
