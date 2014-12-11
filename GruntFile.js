@@ -22,13 +22,22 @@ module.exports = function(grunt) {
 			}
 		},
 
-		"pkg": grunt.file.readJSON("package.json")
+		"pkg": grunt.file.readJSON("package.json"),
+
+		"uglify": {
+			"dist": {
+				"files": {
+					"dist/PostmessagerPat.min.js": [ "src/PostmessagerPat.js" ]
+				}
+			}
+		}
 
 	});
 
 	grunt.loadNpmTasks("grunt-contrib-jshint");
 	grunt.loadNpmTasks("grunt-jsdoc");
+	grunt.loadNpmTasks('grunt-contrib-uglify');
 
-	grunt.registerTask("default", [ "jshint", "jsdoc" ]);
+	grunt.registerTask("default", [ "jshint", "uglify", "jsdoc" ]);
 
 };
